@@ -2,8 +2,6 @@ package meng.checkout.pricing;
 
 import org.junit.Test;
 
-import meng.checkout.pricing.MultipriceOffer;
-import meng.checkout.pricing.PricingRule;
 import meng.checkout.product.Item;
 
 import static org.junit.Assert.assertEquals;
