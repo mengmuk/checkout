@@ -15,11 +15,19 @@ public class CheckoutTest {
 
 	private Checkout checkout;
 	private Random random;
-
+	private int unitPriceInPenceA;
+	private int unitPriceInPenceB;
+	private Item itemA;
+	private Item itemB;
+	
 	@Before
 	public void setUp() {
 		checkout = new Checkout(new HashMap<>());
 		random = new Random();
+		unitPriceInPenceA = generateRandomPrice();
+		unitPriceInPenceB = generateRandomPrice();
+		itemA = new Item("A", unitPriceInPenceA);
+		itemB = new Item("B", unitPriceInPenceB);
 	}
 
 	@Test
@@ -31,8 +39,6 @@ public class CheckoutTest {
 	@Test
 	public void checkoutWithOneItem() {
 
-		int unitPriceInPenceA = generateRandomPrice();
-		Item itemA = new Item("A", unitPriceInPenceA);
 		checkout.scan(itemA);
 		assertEquals(unitPriceInPenceA, checkout.total());
 	}
@@ -40,10 +46,6 @@ public class CheckoutTest {
 	@Test
 	public void checkoutWithTwoItems() {
 
-		int unitPriceInPenceA = generateRandomPrice();
-		int unitPriceInPenceB = generateRandomPrice();
-		Item itemA = new Item("A", unitPriceInPenceA);
-		Item itemB = new Item("B", unitPriceInPenceB);
 		checkout.scan(itemA);
 		checkout.scan(itemB);
 		assertEquals(unitPriceInPenceA + unitPriceInPenceB, checkout.total());
@@ -52,15 +54,30 @@ public class CheckoutTest {
 	@Test
 	public void checkoutWithMultipriceOffer() {
 
-		Item itemA = new Item("A", 50);
-		MultipriceOffer multipriceOffer = new MultipriceOffer(3, 130);
+		int offerPriceInPence = 130;
+		MultipriceOffer multipriceOffer = new MultipriceOffer(3, offerPriceInPence);
 		Map<Item, MultipriceOffer> multipriceOffers = new HashMap<>();
 		multipriceOffers.put(itemA, multipriceOffer);
 		checkout = new Checkout(multipriceOffers);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
-		assertEquals(130, checkout.total());
+		assertEquals(offerPriceInPence, checkout.total());
+	}
+
+	@Test
+	public void checkoutWithMultipriceOfferAndNonOffer() {
+
+		int offerPriceInPence = 130;
+		MultipriceOffer multipriceOffer = new MultipriceOffer(3, offerPriceInPence);
+		Map<Item, MultipriceOffer> multipriceOffers = new HashMap<>();
+		multipriceOffers.put(itemA, multipriceOffer);
+		checkout = new Checkout(multipriceOffers);
+		checkout.scan(itemA);
+		checkout.scan(itemA);
+		checkout.scan(itemA);
+		checkout.scan(itemA);
+		assertEquals(offerPriceInPence + unitPriceInPenceA, checkout.total());
 	}
 
 	public int generateRandomPrice() {
