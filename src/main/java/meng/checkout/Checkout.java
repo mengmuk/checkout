@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import meng.checkout.pricing.MultipriceOffer;
+import meng.checkout.product.Item;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.counting;

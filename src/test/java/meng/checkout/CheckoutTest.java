@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import meng.checkout.pricing.MultipriceOffer;
+import meng.checkout.product.Item;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +20,7 @@ public class CheckoutTest {
 	private int unitPriceInPenceB;
 	private Item itemA;
 	private Item itemB;
-	
+
 	@Before
 	public void setUp() {
 		checkout = new Checkout(new HashMap<>());
