@@ -1,4 +1,4 @@
-package meng.checkout;
+package meng.checkout.pricing;
 
 import org.junit.Test;
 

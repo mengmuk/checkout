@@ -3,11 +3,12 @@ package meng.checkout;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Random;
 
 import meng.checkout.pricing.MultipriceOffer;
+import meng.checkout.pricing.NoPricingRuleFoundException;
+import meng.checkout.pricing.PricingRule;
 import meng.checkout.product.Item;
 
 import static org.junit.Assert.assertEquals;
@@ -18,17 +19,35 @@ public class CheckoutTest {
 	private Random random;
 	private int unitPriceInPenceA;
 	private int unitPriceInPenceB;
+	private int unitPriceInPenceC;
+	private int unitPriceInPenceD;
 	private Item itemA;
 	private Item itemB;
+	private Item itemC;
+	private Item itemD;
+	private int multipriceOfferA;
+	private int multipriceOfferB;
 
 	@Before
 	public void setUp() {
-		checkout = new Checkout(new HashMap<>());
 		random = new Random();
 		unitPriceInPenceA = generateRandomPrice();
 		unitPriceInPenceB = generateRandomPrice();
-		itemA = new Item("A", unitPriceInPenceA);
-		itemB = new Item("B", unitPriceInPenceB);
+		unitPriceInPenceC = generateRandomPrice();
+		unitPriceInPenceD = generateRandomPrice();
+		multipriceOfferA = 130;
+		multipriceOfferB = 45;
+		itemA = new Item("A");
+		itemB = new Item("B");
+		itemC = new Item("C");
+		itemD = new Item("D");
+		checkout = new Checkout(Arrays.asList(
+				new PricingRule(itemA, unitPriceInPenceA, new MultipriceOffer(3, multipriceOfferA)),
+				new PricingRule(itemB, unitPriceInPenceB, new MultipriceOffer(2, multipriceOfferB)),
+				new PricingRule(itemC, unitPriceInPenceC),
+				new PricingRule(itemD, unitPriceInPenceD)
+			)
+		);
 	}
 
 	@Test
@@ -55,30 +74,47 @@ public class CheckoutTest {
 	@Test
 	public void checkoutWithMultipriceOffer() {
 
-		int offerPriceInPence = 130;
-		MultipriceOffer multipriceOffer = new MultipriceOffer(3, offerPriceInPence);
-		Map<Item, MultipriceOffer> multipriceOffers = new HashMap<>();
-		multipriceOffers.put(itemA, multipriceOffer);
-		checkout = new Checkout(multipriceOffers);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
-		assertEquals(offerPriceInPence, checkout.total());
+		assertEquals(multipriceOfferA, checkout.total());
 	}
 
 	@Test
 	public void checkoutWithMultipriceOfferAndNonOffer() {
 
-		int offerPriceInPence = 130;
-		MultipriceOffer multipriceOffer = new MultipriceOffer(3, offerPriceInPence);
-		Map<Item, MultipriceOffer> multipriceOffers = new HashMap<>();
-		multipriceOffers.put(itemA, multipriceOffer);
-		checkout = new Checkout(multipriceOffers);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
 		checkout.scan(itemA);
-		assertEquals(offerPriceInPence + unitPriceInPenceA, checkout.total());
+		assertEquals(multipriceOfferA + unitPriceInPenceA, checkout.total());
+	}
+
+	@Test
+	public void checkoutWithNoOfferItems() {
+
+		checkout.scan(itemC);
+		checkout.scan(itemD);
+		assertEquals(unitPriceInPenceC + unitPriceInPenceD, checkout.total());
+	}
+
+	@Test
+	public void checkoutWithMixedItems() {
+
+		checkout.scan(itemB);
+		checkout.scan(itemA);
+		checkout.scan(itemB);
+		checkout.scan(itemC);
+		checkout.scan(itemD);
+		assertEquals(multipriceOfferB + unitPriceInPenceA + unitPriceInPenceC + unitPriceInPenceD, checkout.total());
+	}
+
+	@Test(expected = NoPricingRuleFoundException.class)
+	public void checkoutWithUnpricedItem() {
+
+		Item itemE = new Item("E");
+		checkout.scan(itemE);
+		checkout.total();
 	}
 
 	public int generateRandomPrice() {

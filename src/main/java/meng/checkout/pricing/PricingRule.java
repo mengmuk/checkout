@@ -28,4 +28,8 @@ public class PricingRule {
 		return groupedOffers * multipriceOffer.getOfferPriceInPence()
 				+ nonOfferQuantity * unitPriceInPence;
 	}
+
+	public Item getItem() {
+		return item;
+	}
 }
