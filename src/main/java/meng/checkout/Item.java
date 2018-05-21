@@ -10,10 +10,6 @@ public class Item {
 		this.unitPriceInPence = unitPriceInPence;
 	}
 
-	public String getSku() {
-		return sku;
-	}
-
 	public int getUnitPriceInPence() {
 		return unitPriceInPence;
 	}
