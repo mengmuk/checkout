@@ -24,3 +24,17 @@ the two B’s and price them at 45 (for a total price so far of 95).
 Extra points: Because the pricing changes frequently we will need to be able to pass in a set of pricing
 rules each time we start handling a checkout transaction.
 
+## Pre-requisites
+- Java 8+
+- JUnit4
+
+## Using Checkout
+Create a new checkout transaction and pass in the pricing rules.
+```java
+Checkout checkout = new Checkout(Arrays.asList(
+				new PricingRule(new Item("A"), 10, new MultipriceOffer(3, 20)),
+				new PricingRule(new Item("B"), 50));
+
+```
+
+
