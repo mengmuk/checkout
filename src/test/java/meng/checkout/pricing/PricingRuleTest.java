@@ -3,28 +3,39 @@ package meng.checkout.pricing;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
+
 import meng.checkout.product.Item;
 
 import static org.junit.Assert.assertEquals;
 
 public class PricingRuleTest {
 
+	private Random random;
+	private int unitPriceInPenceA;
+	private int unitPriceInPenceB;
+	private int multipriceOfferA;
 	private PricingRule pricingRuleWithOffer;
 	private PricingRule pricingRuleWithoutOffer;
 
 	@Before
 	public void setUp() {
 
+		random = new Random();
+		unitPriceInPenceA = generateRandomPrice();
+		unitPriceInPenceB = generateRandomPrice();
+		multipriceOfferA = 130;
+
 		Item itemA = new Item("A");
-		MultipriceOffer multipriceOffer = new MultipriceOffer(3, 130);
-		pricingRuleWithOffer = new PricingRule(itemA, 50, multipriceOffer);
+		MultipriceOffer multipriceOffer = new MultipriceOffer(3, multipriceOfferA);
+		pricingRuleWithOffer = new PricingRule(itemA, unitPriceInPenceA, multipriceOffer);
 
 		Item itemB = new Item("B");
-		pricingRuleWithoutOffer = new PricingRule(itemB, 50);
+		pricingRuleWithoutOffer = new PricingRule(itemB, unitPriceInPenceB);
 	}
 
 	@Test
-	public void calculatePriceForZero() {
+	public void calculatePriceForZeroItems() {
 
 		assertEquals(0, pricingRuleWithOffer.calculateFor(0));
 	}
@@ -32,24 +43,28 @@ public class PricingRuleTest {
 	@Test
 	public void calculatePriceForNonOfferItem() {
 
-		assertEquals(50, pricingRuleWithOffer.calculateFor(1));
+		assertEquals(unitPriceInPenceA, pricingRuleWithOffer.calculateFor(1));
 	}
 
 	@Test
 	public void calculatePriceForOfferItem() {
 
-		assertEquals(130, pricingRuleWithOffer.calculateFor(3));
+		assertEquals(multipriceOfferA, pricingRuleWithOffer.calculateFor(3));
 	}
 
 	@Test
-	public void calculatePriceForOfferItemAndNonOfferItem() {
+	public void calculatePriceForOfferItemsAndNonOfferItem() {
 
-		assertEquals(180, pricingRuleWithOffer.calculateFor(4));
+		assertEquals(unitPriceInPenceA + (multipriceOfferA * 2), pricingRuleWithOffer.calculateFor(7));
 	}
 
 	@Test
 	public void calculatePriceForItemWithoutOffers() {
 
-		assertEquals(200, pricingRuleWithoutOffer.calculateFor(4));
+		assertEquals(unitPriceInPenceB * 4, pricingRuleWithoutOffer.calculateFor(4));
+	}
+
+	public int generateRandomPrice() {
+		return random.nextInt(100);
 	}
 }
