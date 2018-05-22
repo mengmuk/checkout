@@ -37,4 +37,14 @@ Checkout checkout = new Checkout(Arrays.asList(
 
 ```
 
+Scan items into checkout.
+```java
+checkout.scan(item);
 
+```
+
+To calculate the total of the basket of items, total up the checkout, this will return the total in pence. 
+The pricing rules and any related promotional multiprice offers will be taken into account in the calculation.
+```java
+int total = checkout.total();
+```
