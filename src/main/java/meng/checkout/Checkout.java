@@ -14,8 +14,8 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class Checkout {
 
-	private List<Item> items = new ArrayList<>();
-	private List<PricingRule> pricingRules;
+	private final List<Item> items = new ArrayList<>();
+	private final List<PricingRule> pricingRules;
 
 	public Checkout(List<PricingRule> pricingRules) {
 		this.pricingRules = pricingRules;
@@ -28,7 +28,7 @@ public class Checkout {
 		PricingRule pricingRule = pricingRules.stream()
 				.filter(pr -> pr.getItem().equals(item))
 				.findFirst()
-				.orElseThrow(() -> new NoPricingRuleFoundException());
+				.orElseThrow(NoPricingRuleFoundException::new);
 
 		return pricingRule.calculateFor(quantity);
 	}
