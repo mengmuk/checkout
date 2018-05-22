@@ -2,6 +2,10 @@ package meng.checkout.pricing;
 
 import meng.checkout.product.Item;
 
+/**
+ * PricingRule contains the pricing parameters for an Item. Each item must have a unit price in pence defined.
+ * Optional promotional multiprice offers can also be defined for an Item.
+ */
 public class PricingRule {
 
 	private final Item item;
@@ -20,6 +24,11 @@ public class PricingRule {
 		this.multipriceOffer = multipriceOffer;
 	}
 
+	/**
+	 * Calculates the price for a given quantity of the Item.
+	 * @param quantity the number of the same Item
+	 * @return the calculated amount of the Item
+	 */
 	public int calculateFor(int quantity) {
 
 		int groupedOffers = quantity / multipriceOffer.getQuantity();

@@ -12,6 +12,10 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
+/**
+ * Checkout tracks the items that are being scanned through and totals up the amounts. Pricing rules will need to be
+ * passed in to setup the checkout process since pricing changes frequently.
+ */
 public class Checkout {
 
 	private final List<Item> items = new ArrayList<>();
@@ -33,7 +37,10 @@ public class Checkout {
 		return pricingRule.calculateFor(quantity);
 	}
 
-
+	/**
+	 * Calculates the total amount of all Items scanned through the checkout.
+	 * @return the total amount in pence for all the added Items
+	 */
 	public int total() {
 
 		Map<Item, Long> quantityPerItem =
@@ -45,6 +52,10 @@ public class Checkout {
 				.sum();
 	}
 
+	/**
+	 * Scans an Item and tracks it for totalling up later.
+	 * @param item the product Item that is added to the checkout
+	 */
 	public void scan(Item item) {
 		items.add(item);
 	}

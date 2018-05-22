@@ -1,5 +1,9 @@
 package meng.checkout.pricing;
 
+/**
+ * MultipriceOffer can be set within a PricingRule of an Item to represent offers of:
+ * buy n of them and which will cost you y in pence
+ */
 public class MultipriceOffer {
 
 	private final int quantity;
